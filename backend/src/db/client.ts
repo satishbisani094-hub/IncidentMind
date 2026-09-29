@@ -7,7 +7,9 @@ let dbInstance: Database | null = null;
 export async function getDb(): Promise<Database> {
   if (dbInstance) return dbInstance;
 
-  const dbPath = path.resolve(process.cwd(), 'incidentmind.db');
+  const dbPath = process.env.VERCEL
+    ? path.resolve('/tmp', 'incidentmind.db')
+    : path.resolve(process.cwd(), 'incidentmind.db');
 
   dbInstance = await open({
     filename: dbPath,

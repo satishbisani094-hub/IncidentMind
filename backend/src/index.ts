@@ -46,8 +46,9 @@ async function startServer() {
     await runSeed();
   }
 
-  app.listen(config.port, () => {
-    console.log(`
+  if (!process.env.VERCEL) {
+    app.listen(config.port, () => {
+      console.log(`
 🚀 ==================================================
    IncidentMind Autonomous AI Incident Agent Backend
 ==================================================
@@ -55,10 +56,14 @@ async function startServer() {
    Hindsight Bank: ${config.hindsightBankId}
    LLM Provider:   ${config.llmProvider}
 ==================================================
-    `);
-  });
+      `);
+    });
+  }
 }
 
+// Auto-initialize DB on serverless invocation or server startup
 startServer().catch((err) => {
-  console.error('Failed to start IncidentMind backend server:', err);
+  console.error('Failed to initialize IncidentMind backend server:', err);
 });
+
+export default app;
